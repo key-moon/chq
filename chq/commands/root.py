@@ -13,5 +13,6 @@ def _handler(res: Namespace):
 root_command = SubCommand(
     "root",
     _initializer,
-    _handler
+    _handler,
+    description="Show the current root of challenges"
 )

@@ -1,6 +1,6 @@
 from argparse import ArgumentParser, Namespace
-from dataclasses import dataclass
-from typing import Callable, Dict, List, Optional, Type, Generic, TypeVar
+from dataclasses import dataclass, field
+from typing import Callable, List, Optional
 
 @dataclass
 class SubCommand:
@@ -9,12 +9,12 @@ class SubCommand:
     parser_initializer: Callable[[ArgumentParser], None]
     handler: Callable[[Namespace], None]
 
-    aliases: Optional[List[str]] = None
+    aliases: List[str] = field(default_factory=list)
     description: Optional[str] = None
 
 def register_subcommands(parser: ArgumentParser, subcommands: List[SubCommand]):
     subparser = parser.add_subparsers()
     for command in subcommands:
-        parser = subparser.add_parser(command.name, description=command.description)
+        parser = subparser.add_parser(command.name, description=command.description, aliases=command.aliases, help=command.description)
         command.parser_initializer(parser)
         parser.set_defaults(handler=command.handler)

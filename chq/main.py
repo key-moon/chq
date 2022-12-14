@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+from chq.commands.help import get_help_command
 
 from chq.commands.root import root_command
 from chq.commands.ctx import ctx_command
@@ -32,10 +33,12 @@ from chq.commands.subcommand import register_subcommands
 
 # chq root
 def main():
-    parser = ArgumentParser(description="")
+    parser = ArgumentParser(description="Manage ctfs and challenges")
+    help_command = get_help_command(parser)
     register_subcommands(
         parser,
         [
+            help_command,
             root_command,
             ctx_command,
             init_chall_command,
@@ -45,4 +48,7 @@ def main():
         ]
     )
     args = parser.parse_args()
-    args.handler(args)
+    if hasattr(args, 'handler'):
+        args.handler(args)
+    else:
+        parser.print_help()

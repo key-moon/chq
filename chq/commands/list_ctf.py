@@ -6,15 +6,16 @@ from chq.fs.root import get_initialized_default_root
 from chq.util.path_normalize import normalize
 
 def _initializer(parser: ArgumentParser):
-    parser.add_argument('--show-name', dest="show_name", action="store_const", const=True, default=False)
+    parser.add_argument('--full-path', '-p', dest="only_name", action="store_const", const=False, default=True, help="show full paths")
 
 def _handler(res: Namespace):
     ctx = CTX.get(get_initialized_default_root())
     for ctf in ctx.root.iter_ctf():
-        print(normalize(ctf.path.name) if res.show_name else ctf.path)
+        print(normalize(ctf.path.name) if res.only_name else ctf.path)
 
 list_ctf_command = SubCommand(
     "list-ctf",
     _initializer,
-    _handler
+    _handler,
+    description="List ctfs"
 )

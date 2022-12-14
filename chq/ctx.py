@@ -1,8 +1,4 @@
-import json
-import logging
-from typing import Any, Dict, Optional
-from pathlib import Path
-from xml.dom import NotFoundErr
+from typing import Dict
 from chq.fs.ctxfile import CTXFile
 
 from chq.fs.root import Root, get_initialized_default_root
@@ -26,12 +22,12 @@ class CTX:
     @property
     def ctf(self):
         if "ctf" not in self:
-            raise NotFoundErr('ctf')
+            raise KeyError('ctf')
         return self.root.get_ctf(self["ctf"])
     @property
     def chall(self):
         if "chall" not in self:
-            raise NotFoundErr('chall')
+            raise KeyError('chall')
         return self.ctf.get_chall(self["chall"])
 
     def _get_dict_and_file_from_key(self, key: str):
@@ -40,7 +36,7 @@ class CTX:
         
         location = self.key_location[key]
         if location not in self._ctxfile_dic:
-            raise NotFoundErr(f'{location} has not been set')
+            raise KeyError(location)
         
         return self._ctx_dics[location], self._ctxfile_dic[location]
 
@@ -56,9 +52,10 @@ class CTX:
     def __contains__(self, key: str) -> bool:
         if key not in self.key_location:
             return False
-        
         location = self.key_location[key]
-        if location not in self._ctxfile_dic:
+        if location not in self._ctx_dics:
+            return False
+        if key not in self._ctx_dics[location]:
             return False
         return True
 
@@ -73,7 +70,7 @@ class CTX:
 
             ctx._ctxfile_dic["global"] = ctx.root.ctxfile
             ctx._ctx_dics["global"] = ctx.root.ctxfile.get_content()
-            if "global" not in ctx: return ctx
+            if "ctf" not in ctx: return ctx
             
             ctx._ctxfile_dic["ctf"] = ctx.ctf.ctxfile
             ctx._ctx_dics["ctf"] = ctx.ctf.ctxfile.get_content()
