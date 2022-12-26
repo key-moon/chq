@@ -1,7 +1,7 @@
-from typing import Dict
+from typing import Dict, Optional
 from chq.fs.ctxfile import CTXFile
 
-from chq.fs.root import Root, get_initialized_default_root
+from chq.fs.root import Root
 
 CTX_FILENAME = ".ctx"
 DEFAULT_KEY_LOCATION = {
@@ -12,7 +12,7 @@ class CTX:
     _root: Root
     _ctx_dics: Dict[str, Dict[str, str]]
     _ctxfile_dic: Dict[str, CTXFile]
-    key_location: Dict[str, str]
+    known_key: Dict[str, str]
     def __init__(self) -> None:
         pass
 
@@ -31,10 +31,10 @@ class CTX:
         return self.ctf.get_chall(self["chall"])
 
     def _get_dict_and_file_from_key(self, key: str):
-        if key not in self.key_location:
+        if key not in self.known_key:
             raise KeyError(key)
         
-        location = self.key_location[key]
+        location = self.known_key[key]
         if location not in self._ctxfile_dic:
             raise KeyError(location)
         
@@ -44,15 +44,38 @@ class CTX:
         ctx_dic, _ = self._get_dict_and_file_from_key(key)
         return ctx_dic[key]
 
-    def set_and_save(self, key: str, val: str):
+    def set_and_save(self, key: str, val: Optional[str]):
         ctx_dic, ctxfile = self._get_dict_and_file_from_key(key)
-        ctx_dic[key] = val
+        if val is None:
+            del ctx_dic[key]
+        else:
+            ctx_dic[key] = val
         ctxfile.set_content(ctx_dic)
+        self.update()
+
+    def update(self):
+        if self._root is None:
+            raise Exception()
+        try:
+            self._ctxfile_dic = {}
+            self._ctx_dics = {}
+            self._ctxfile_dic["global"] = self.root.ctxfile
+            self._ctx_dics["global"] = self.root.ctxfile.get_content()
+            if "ctf" not in self: return
+            
+            self._ctxfile_dic["ctf"] = self.ctf.ctxfile
+            self._ctx_dics["ctf"] = self.ctf.ctxfile.get_content()
+            if "chall" not in self: return
+            
+            self._ctxfile_dic["chall"] = self.chall.ctxfile
+            self._ctx_dics["chall"] = self.chall.ctxfile.get_content()
+        except:
+            raise Exception("Error while reading the ctx from file")
 
     def __contains__(self, key: str) -> bool:
-        if key not in self.key_location:
+        if key not in self.known_key:
             return False
-        location = self.key_location[key]
+        location = self.known_key[key]
         if location not in self._ctx_dics:
             return False
         if key not in self._ctx_dics[location]:
@@ -61,26 +84,8 @@ class CTX:
 
     @staticmethod
     def get(root: Root):
-        try:
-            ctx = CTX()
-            ctx._root = root
-            ctx._ctx_dics = {}
-            ctx._ctxfile_dic = {}
-            ctx.key_location = DEFAULT_KEY_LOCATION
-
-            ctx._ctxfile_dic["global"] = ctx.root.ctxfile
-            ctx._ctx_dics["global"] = ctx.root.ctxfile.get_content()
-            if "ctf" not in ctx: return ctx
-            
-            ctx._ctxfile_dic["ctf"] = ctx.ctf.ctxfile
-            ctx._ctx_dics["ctf"] = ctx.ctf.ctxfile.get_content()
-            if "chall" not in ctx: return ctx
-            
-            ctx._ctxfile_dic["chall"] = ctx.chall.ctxfile
-            ctx._ctx_dics["chall"] = ctx.chall.ctxfile.get_content()
-
-            return ctx
-        except:
-
-            raise Exception("Error while reading the ctx from file")
-
+        ctx = CTX()
+        ctx._root = root
+        ctx.known_key = DEFAULT_KEY_LOCATION
+        ctx.update()
+        return ctx

@@ -13,7 +13,7 @@ def _initializer(parser: ArgumentParser):
 def _handler(res: Namespace):
     ctx = CTX.get(get_initialized_default_root())
     if res.ctf is not None:
-        ctfs = [ctx.root.get_ctf(normalize(res.ctf)) if res.ctf != "" else ctx.ctf]
+        ctfs = [ctx.root.get_ctf(normalize(res.ctf))] if res.ctf != "" else [ctx.ctf]
     else:
         ctfs = ctx.root.iter_ctf()
     for ctf in ctfs:

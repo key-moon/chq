@@ -19,11 +19,12 @@ class Chall:
     @property
     def ctf(self):
         return ctf.Ctf(self.path.parent)
-    @property
-    def origdir_path(self):
-        return self.path / ORIGINAL_DIR
 
     def init(self, allow_exists=True):
         create_dir(self.path, "challdir", allow_exists=allow_exists)
-        create_dir(self.origdir_path, "origdir", allow_exists=allow_exists)
         self.ctxfile.init(allow_exists=allow_exists)
+
+    def ensure_initialized(self):
+        if not self.path.is_dir():
+            raise FileNotFoundError(self.path)
+        self.ctxfile.ensure_initialized()

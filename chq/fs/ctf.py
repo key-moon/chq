@@ -25,6 +25,11 @@ class Ctf:
         create_dir(self.path, "ctfdir", allow_exists=allow_exists)
         self.ctxfile.init(allow_exists=allow_exists)
 
+    def ensure_initialized(self):
+        if not self.path.is_dir():
+            raise FileNotFoundError(self.path)
+        self.ctxfile.ensure_initialized()
+
     def iter_chall(self):
         for dir in self.path.iterdir():
             if not dir.is_dir(): continue

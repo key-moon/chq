@@ -8,7 +8,7 @@ def get_help_command(parser: ArgumentParser):
         pass
 
     def _handler(res: Namespace):
-        print(parser.parse_args([res.command, '--help']))
+        parser.parse_args([res.command, '--help'])
 
     return SubCommand(
         "help",

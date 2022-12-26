@@ -3,37 +3,19 @@ from chq.commands.help import get_help_command
 
 from chq.commands.root import root_command
 from chq.commands.ctx import ctx_command
+from chq.commands.switch import switch_command
 from chq.commands.init_chall import init_chall_command
 from chq.commands.init_ctf import init_ctf_command
 from chq.commands.list_chall import list_chall_command
 from chq.commands.list_ctf import list_ctf_command
+from chq.commands.move_chall import move_chall_command
+from chq.commands.add_content import add_content_command
+from chq.commands.solved import solved_command
 
 from chq.commands.subcommand import register_subcommands
 
-# chq 
-
-# ワークフローイメージ
-# chq init-ctf SECCON-CTF-2022
-# chq ctx ctf SECCON-CTF-2022
-# chq init babypwn
-# chq ctx chall babypwn
-# chq add -x babypwn.tar.gz
-# chq add solve.py
-# chq restore chall.cpp -O _chall.cpp -y
-
-# chq 
-
-# chq init 
-# chq init-ctf 
-# chq remove 
-# chq remove-ctf 
-
-# chq list 
-# chq list-ctf 
-
-# chq root
-def main():
-    parser = ArgumentParser(description="Manage ctfs and challenges")
+def get_parser():
+    parser = ArgumentParser(prog="chq" , description="Manage ctfs and challenges")
     help_command = get_help_command(parser)
     register_subcommands(
         parser,
@@ -41,12 +23,20 @@ def main():
             help_command,
             root_command,
             ctx_command,
+            switch_command,
             init_chall_command,
             init_ctf_command,
             list_chall_command,
             list_ctf_command,
+            move_chall_command,
+            add_content_command,
+            solved_command,
         ]
     )
+    return parser
+
+def main():
+    parser = get_parser()
     args = parser.parse_args()
     if hasattr(args, 'handler'):
         args.handler(args)

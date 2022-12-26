@@ -28,6 +28,9 @@ class CTXFile:
     def init(self, allow_exists=False):
         create_file(self.path, content=_DEFAULT_CTXFILE_CONTENT, name="ctxfile", allow_exists=allow_exists)
 
+    def ensure_initialized(self):
+        self._check_exists()
+
     def _check_exists(self):
         if not self.path.is_file():
             raise FileNotFoundError(f"file not found at {self.path}")

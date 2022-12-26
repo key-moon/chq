@@ -1,0 +1,219 @@
+#compdef chq
+# ------------------------------------------------------------------------------
+# Copyright (c) 2022 keymoon
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#   * Redistributions of source code must retain the above copyright
+#     notice, this list of conditions and the following disclaimer.
+#   * Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in the
+#     documentation and/or other materials provided with the distribution.
+#   * Neither the name of the project nor the
+#     names of its contributors may be used to endorse or promote products
+#     derived from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL ZSH-USERS BE LIABLE FOR ANY
+# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# ------------------------------------------------------------------------------
+# Description
+# -----------
+#
+#  Completion script for chq.
+#
+# ------------------------------------------------------------------------------
+# Authors
+# -------
+#
+#  * keymoon
+#
+# ------------------------------------------------------------------------------
+# Generated with zpycompletion v1.2
+
+_complete_ctx_key() {
+  local -a _keys
+  _keys=( ${(@ps: :)"$(_call_program ctxkeys chq ctx --available-keys)"} )
+  _describe 'ctx key' _keys
+}
+
+_complete_chall() {
+  local -a _challs
+  _challs=( ${(@f)"$(_call_program ctxkeys chq list-chall)"} )
+  _describe 'challs' _challs
+}
+
+_complete_ctf() {
+  local -a _ctfs
+  _ctfs=( ${(@f)"$(_call_program ctxkeys chq list-ctf)"} )
+  _describe 'ctf' _ctfs
+}
+
+
+_subparser_action_cmd_help() {
+  _arguments \
+      {-h,--help}"[show help text]" \
+      "1:command:_files"
+  }
+
+_subparser_action_cmd_root() {
+  _arguments \
+      {-h,--help}"[show help text]"
+  }
+
+_subparser_action_cmd_ctx() {
+  _arguments \
+      {-h,--help}"[show help text]" \
+      "1:key:_complete_ctx_key" \
+      "2:value:_files" \
+      "--available-keys[show keys]" \
+      "--hide-key[hide key]"
+  }
+
+_subparser_action_cmd_switch() {
+  _arguments \
+      {-h,--help}"[show help text]" \
+      "1:chall_name:_complete_chall"
+  }
+
+_subparser_action_cmd_init-chall() {
+  _arguments \
+      {-h,--help}"[show help text]" \
+      "1:name:_files" \
+      "--only-init[don't switch context after the initialization]" \
+      "--allow-exists[don't stop the initialization even if the directory already exists]"
+  }
+
+_subparser_action_cmd_init() {
+  _arguments \
+      {-h,--help}"[show help text]" \
+      "1:name:_files" \
+      "--only-init[don't switch context after the initialization]" \
+      "--allow-exists[don't stop the initialization even if the directory already exists]"
+  }
+
+_subparser_action_cmd_init-ctf() {
+  _arguments \
+      {-h,--help}"[show help text]" \
+      "1:name:_files" \
+      "--only-init[don't switch context after the initialization]" \
+      "--no-solved[don't create the directory for solved challenge]" \
+      "--allow-exists[don't stop the initialization even if the directory already exists]"
+  }
+
+_subparser_action_cmd_list-chall() {
+  _arguments \
+      {-h,--help}"[show help text]" \
+      "--ctf[specify the ctf (default: current context)]:ctf" \
+      "--only-cur-ctx[only list the chall inside the current ctf]" \
+      {--full-path,-p}"[show full paths]"
+  }
+
+_subparser_action_cmd_list() {
+  _arguments \
+      {-h,--help}"[show help text]" \
+      "--ctf[specify the ctf (default: current context)]:ctf" \
+      "--only-cur-ctx[only list the chall inside the current ctf]" \
+      {--full-path,-p}"[show full paths]"
+  }
+
+_subparser_action_cmd_list-ctf() {
+  _arguments \
+      {-h,--help}"[show help text]" \
+      {--full-path,-p}"[show full paths]"
+  }
+
+_subparser_action_cmd_move-chall() {
+  _arguments \
+      {-h,--help}"[show help text]" \
+      "1:chall_name:_complete_chall" \
+      "2:dest_ctf:_complete_ctf"
+  }
+
+_subparser_action_cmd_move() {
+  _arguments \
+      {-h,--help}"[show help text]" \
+      "1:chall_name:_complete_chall" \
+      "2:dest_ctf:_complete_ctf"
+  }
+
+_subparser_action_cmd_mv() {
+  _arguments \
+      {-h,--help}"[show help text]" \
+      "1:chall_name:_complete_chall" \
+      "2:dest_ctf:_complete_ctf"
+  }
+
+_subparser_action_cmd_add-content() {
+  _arguments \
+      {-h,--help}"[show help text]" \
+      "*:files:_files" \
+      {--extract,-x}"[files to extract]:extract" \
+      {--extract-raw,-X}"[files to extract(without recursive digging)]:extract raw" \
+      "--chall[name of the challenge]:chall"
+  }
+
+_subparser_action_cmd_add() {
+  _arguments \
+      {-h,--help}"[show help text]" \
+      "*:files:_files" \
+      {--extract,-x}"[files to extract]:extract" \
+      {--extract-raw,-X}"[files to extract(without recursive digging)]:extract raw" \
+      "--chall[name of the challenge]:chall"
+  }
+
+_subparser_action_cmd_solved() {
+  _arguments \
+      {-h,--help}"[show help text]" \
+      "1:chall_name:_complete_chall"
+  }
+
+
+_subparser_action() {
+  local -a _subparser_cmds
+  _subparser_cmds=(
+        "help:show help of the subcommand"
+        "root:Show the current root of challenges"
+        "ctx:Get and set contexts"
+        "switch:"
+        "init-chall:Initialize a challenge"
+        "init:Initialize a challenge"
+        "init-ctf:Initialize a ctf"
+        "list-chall:List challenges"
+        "list:List challenges"
+        "list-ctf:List ctfs"
+        "move-chall:Move the challenge"
+        "move:Move the challenge"
+        "mv:Move the challenge"
+        "add-content:Add file to the challenge"
+        "add:Add file to the challenge"
+        "solved:Move to the solved directory"
+      )
+
+  if (( CURRENT == 1 )); then
+    _describe "commands" _subparser_cmds
+  else
+    local curcontext="$curcontext"
+    cmd="${${_subparser_cmds[(r)$words[1]:*]%%:*}}"
+    if (( $#cmd )); then
+      if (( $+functions[_subparser_action_cmd_$cmd] )); then
+        _subparser_action_cmd_$cmd CURRENT
+      else
+        _files
+      fi
+    else
+      _message "unknown command: $words[1]"
+    fi
+  fi
+}
+_arguments \
+  {-h,--help}"[show help text]" \
+  "*::action:_subparser_action"
