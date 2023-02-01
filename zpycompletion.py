@@ -227,6 +227,11 @@ class _ZshCompletion(object):
 					line = '"*"' + options + "[{0}]:{1}".format(action.help, action.dest.replace('_', ' '))
 				elif isinstance(action, argparse._StoreAction):
 					line = options + "[{0}]:{1}".format(action.help, action.dest.replace('_', ' '))
+					a = {}
+					if action.dest in a:
+						line += ":" + a[action.dest]
+					else:
+						line += ":" + "_files"
 				elif isinstance(action, argparse._VersionAction):
 					line = options + '[show version information]'
 				elif isinstance(action, argparse._StoreConstAction):

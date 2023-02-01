@@ -1,6 +1,6 @@
 #compdef chq
 # ------------------------------------------------------------------------------
-# Copyright (c) 2022 keymoon
+# Copyright (c) 2023 keymoon
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -112,7 +112,7 @@ _subparser_action_cmd_init-ctf() {
 _subparser_action_cmd_list-chall() {
   _arguments \
       {-h,--help}"[show help text]" \
-      "--ctf[specify the ctf (default: current context)]:ctf" \
+      "--ctf[specify the ctf (default: current context)]:ctf:_files" \
       "--only-cur-ctx[only list the chall inside the current ctf]" \
       {--full-path,-p}"[show full paths]"
   }
@@ -120,7 +120,7 @@ _subparser_action_cmd_list-chall() {
 _subparser_action_cmd_list() {
   _arguments \
       {-h,--help}"[show help text]" \
-      "--ctf[specify the ctf (default: current context)]:ctf" \
+      "--ctf[specify the ctf (default: current context)]:ctf:_files" \
       "--only-cur-ctx[only list the chall inside the current ctf]" \
       {--full-path,-p}"[show full paths]"
   }
@@ -156,18 +156,18 @@ _subparser_action_cmd_add-content() {
   _arguments \
       {-h,--help}"[show help text]" \
       "*:files:_files" \
-      {--extract,-x}"[files to extract]:extract" \
-      {--extract-raw,-X}"[files to extract(without recursive digging)]:extract raw" \
-      "--chall[name of the challenge]:chall"
+      {--extract,-x}"[files to extract]:extract:_files" \
+      {--extract-raw,-X}"[files to extract(without recursive digging)]:extract raw:_files" \
+      "--chall[name of the challenge]:chall:_files"
   }
 
 _subparser_action_cmd_add() {
   _arguments \
       {-h,--help}"[show help text]" \
       "*:files:_files" \
-      {--extract,-x}"[files to extract]:extract" \
-      {--extract-raw,-X}"[files to extract(without recursive digging)]:extract raw" \
-      "--chall[name of the challenge]:chall"
+      {--extract,-x}"[files to extract]:extract:_files" \
+      {--extract-raw,-X}"[files to extract(without recursive digging)]:extract raw:_files" \
+      "--chall[name of the challenge]:chall:_files"
   }
 
 _subparser_action_cmd_solved() {

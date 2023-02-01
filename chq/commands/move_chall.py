@@ -40,6 +40,9 @@ def _handler(res: Namespace):
     chall.path.rename(dest_path)
 
     if ctx["ctf"] == ctf_name and ctx["chall"] == chall_name:
+        ctx.set_and_save("chall", None)
+        ctx.set_and_save("ctf", None)
+        
         ctx.set_and_save("ctf", dest_ctf_name)
         ctx.set_and_save("chall", dest_chall_name)
     print(dest_path)
