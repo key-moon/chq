@@ -1,7 +1,9 @@
 from argparse import ArgumentParser, Namespace
+import os
 from pathlib import Path
 import shutil
 import tempfile
+from chq.commands.get_current_ctf import get_ctf_and_chall
 
 from chq.commands.parse_name import parse_chall_name
 from chq.commands.subcommand import SubCommand
@@ -19,12 +21,9 @@ def _handler(res: Namespace):
     ctx = CTX.get(get_initialized_default_root())
     
     ctf_name, chall_name = parse_chall_name(res.chall)
-    if ctf_name is None:
-        ctf_name = ctx["ctf"]
-    if chall_name is None:
-        chall_name = ctx["chall"]
-    ctf_name, chall_name = normalize(ctf_name), normalize(chall_name)
-
+    if ctf_name is None or chall_name is None:
+        ctf_name, chall_name = get_ctf_and_chall(ctx, Path.cwd().absolute())
+    
     ctf = ctx.root.get_ctf(ctf_name)
     chall = ctf.get_chall(chall_name)
     ctf.ensure_initialized()
@@ -44,11 +43,10 @@ def _handler(res: Namespace):
         dir = Path(tempfile.mkdtemp())
         # TODO: check the file name to avoid zipslip
         shutil.unpack_archive(path, dir)
-        while do_rec:
-            dirs = [d for d in dir.iterdir() if d.is_dir()]
-            if len(dirs) != 1: break
-            dir = dirs[0]
-            break
+        while do_rec and dir.is_dir():
+            if len(list(dir.iterdir())) != 1 or not next(dir.iterdir()).is_dir():
+                break
+            dir = next(dir.iterdir())
         shutil.copytree(dir, chall.path, dirs_exist_ok=True)
 
 add_content_command = SubCommand(

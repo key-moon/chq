@@ -1,4 +1,7 @@
 from argparse import ArgumentParser, Namespace
+import os
+from pathlib import Path
+from chq.commands.get_current_ctf import get_ctf
 
 from chq.commands.parse_name import parse_chall_name
 from chq.commands.subcommand import SubCommand
@@ -16,7 +19,7 @@ def _handler(res: Namespace):
 
     ctf_name, chall_name = parse_chall_name(res.name)
     if ctf_name is None:
-        ctf_name = ctx["ctf"]
+        ctf_name = get_ctf(ctx, Path.cwd().absolute())
     assert chall_name is not None
     ctf_name, chall_name = normalize(ctf_name), normalize(chall_name)
 

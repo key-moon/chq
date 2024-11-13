@@ -14,10 +14,8 @@ def _handler(res: Namespace):
     ctx = CTX.get(get_initialized_default_root())
     
     ctf_name, chall_name = parse_chall_name(res.chall_name)
-    if ctf_name is None:
-        ctf_name = ctx["ctf"]
-    if chall_name is None:
-        chall_name = ctx["chall"]
+    if ctf_name is None or chall_name is None:
+        raise Exception("invalid chall name", res.chall_name)
     ctf_name, chall_name = normalize(ctf_name), normalize(chall_name)
 
     dest_ctf_name, dest_chall_name = parse_dest_name(res.dest_ctf)

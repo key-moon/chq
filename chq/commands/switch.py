@@ -1,6 +1,8 @@
 from argparse import ArgumentParser, Namespace
 from os import getcwd
+import os
 from pathlib import Path
+from chq.commands.get_current_ctf import get_ctf_and_chall
 from chq.commands.parse_name import parse_chall_name
 
 from chq.commands.subcommand import SubCommand
