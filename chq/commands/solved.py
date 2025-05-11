@@ -34,8 +34,6 @@ def _handler(res: Namespace):
 
     chall.path.rename(dest_path)
 
-    if "ctf" in ctx and "chall" in ctx and ctx["ctf"] == ctf_name and ctx["chall"] == chall_name:
-        ctx.set_and_save("chall", None)
     print(dest_path)
 
 solved_command = SubCommand(

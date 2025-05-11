@@ -26,8 +26,6 @@ def _handler(res: Namespace):
     ctf = ctx.root.get_ctf(ctf_name)
     chall = ctf.get_chall(chall_name)
     chall.init(allow_exists=res.allow_exists)
-    if not res.only_init:
-        ctx.set_and_save("chall", chall_name)
     print(chall.path)
 
 init_chall_command = SubCommand(

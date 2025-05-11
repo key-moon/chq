@@ -35,7 +35,6 @@ def _handler(res: Namespace):
     chall.ensure_initialized()
 
     ctx.set_and_save("ctf", ctf_name)
-    ctx.set_and_save("chall", chall_name)
 
 switch_command = SubCommand(
     "switch",

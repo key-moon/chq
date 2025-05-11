@@ -6,7 +6,6 @@ from chq.fs.root import Root
 CTX_FILENAME = ".ctx"
 DEFAULT_KEY_LOCATION = {
     "ctf": "global",
-    "chall": "ctf"
 }
 class CTX:
     _root: Root
@@ -24,11 +23,6 @@ class CTX:
         if "ctf" not in self:
             raise KeyError('ctf')
         return self.root.get_ctf(self["ctf"])
-    @property
-    def chall(self):
-        if "chall" not in self:
-            raise KeyError('chall')
-        return self.ctf.get_chall(self["chall"])
 
     def _get_dict_and_file_from_key(self, key: str):
         if key not in self.known_key:
@@ -62,13 +56,6 @@ class CTX:
             self._ctxfile_dic["global"] = self.root.ctxfile
             self._ctx_dics["global"] = self.root.ctxfile.get_content()
             if "ctf" not in self: return
-            
-            self._ctxfile_dic["ctf"] = self.ctf.ctxfile
-            self._ctx_dics["ctf"] = self.ctf.ctxfile.get_content()
-            if "chall" not in self: return
-            
-            self._ctxfile_dic["chall"] = self.chall.ctxfile
-            self._ctx_dics["chall"] = self.chall.ctxfile.get_content()
         except:
             raise Exception("Error while reading the ctx from file")
 
